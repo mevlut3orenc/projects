@@ -1,0 +1,27 @@
+list1 = [[1,'a',['cat'],2],[[[3]],'dog'],4,5]
+def flatten_list(list1):
+    
+    flat_list = []
+    
+    for item in list1:
+        
+        if type(item) == list:
+            flat_list.extend(flatten_list(item))
+            
+        else:
+            flat_list.append(item)
+    
+    return flat_list
+
+print(flatten_list(list1))
+
+# reversed list
+list1 = [[1, 2], [3, 4], [5, 6, 7]]
+
+def reverse_list(list1):
+    
+    reversed_list = [newList[::-1] for newList in list1[::-1]]
+    return reversed_list
+
+
+print(reverse_list(list1))
