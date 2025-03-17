@@ -1,0 +1,105 @@
+from tkinter import *
+from deep_translator import GoogleTranslator
+
+def translate_text():
+    input_text = text_area.get("1.0", END).strip()
+    
+    if top_left_tag["text"] == "İngilizce":
+        source_lang = "en"
+        target_lang = "tr"
+    else:
+        source_lang = "tr"
+        target_lang = "en"
+
+    if input_text:
+        try:
+            translated_text = GoogleTranslator(source=source_lang, target=target_lang).translate(input_text)
+            text_area2.delete("1.0", END)
+            text_area2.insert(END, translated_text)
+        except Exception as e:
+            text_area2.delete("1.0", END)
+            text_area2.insert(END, "Çeviri başarısız! İnternet bağlantınızı kontrol edin.")
+
+def swap_text():
+    text1 = text_area.get("1.0", END).strip()
+    text2 = text_area2.get("1.0", END).strip()
+
+    if text1 == "":
+        text1 = "Metin giriniz..."
+    if text2 == "":
+        text2 = "Çeviri"
+
+    text_area.delete("1.0", END)
+    text_area2.delete("1.0", END)
+
+    text_area.insert(END, text2)
+    text_area2.insert(END, text1)
+
+    english_label_text = top_left_tag["text"]
+    turkish_label_text = top_right_tag["text"]
+    top_left_tag.config(text=turkish_label_text)
+    top_right_tag.config(text=english_label_text)
+
+def clear_placeholder(event, text_widget, default_text):
+    if text_widget.get("1.0", END).strip() == default_text:
+        text_widget.delete("1.0", END)
+
+def restore_placeholder(event, text_widget, default_text):
+    if text_widget.get("1.0", END).strip() == "":
+        text_widget.insert(END, default_text)
+
+root = Tk()
+root.title('İngilizce-Türkçe Sözlük')
+
+canvas = Canvas(root, height=450, width=750)
+canvas.pack()
+
+frame_top = Frame(root, bg='#a0522d')
+frame_top.place(relx=0.09, rely=0.09, relwidth=0.8, relheight=0.06)
+
+frame_top2 = Frame(root, bg='#f5f5dc')
+frame_top2.place(relx=0.09, rely=0.15, relwidth=0.372, relheight=0.05)
+
+frame_top3 = Frame(root, bg='#f5f5dc')
+frame_top3.place(relx=0.518, rely=0.15, relwidth=0.372, relheight=0.05)
+
+frame_top_left = Frame(root, bg='#dddddd')
+frame_top_left.place(relx=0.09, rely=0.21, relwidth=0.372, relheight=0.5)
+
+frame_top_right = Frame(root, bg='#bebebe')
+frame_top_right.place(relx=0.518, rely=0.21, relwidth=0.372, relheight=0.5)
+
+subject_tag = Label(frame_top, bg='#a0522d', text='İngilizce-Türkçe Çeviri Sözlüğü', font='Arial 10 bold')
+subject_tag.pack(padx=3.5, pady=3.5)
+
+top_left_tag = Label(frame_top2, fg='#000000', bg='#f5f5dc', text='İngilizce', font='Arial 11 bold')
+top_left_tag.pack(padx=0.5, pady=0.5)
+
+top_right_tag = Label(frame_top3, bg='#f5f5dc', fg='#000000', text='Türkçe', font='Arial 11 bold')
+top_right_tag.pack(padx=0.5, pady=0.5)
+
+swap_button = Button(root, text="↔", font=('Arial', 12, 'bold'), command=swap_text)
+swap_button.place(relx=0.463, rely=0.148, relwidth=0.055, relheight=0.057)
+
+text_area = Text(frame_top_left, bg='#ffffff', fg='#000000', font=('Arial', 11), width=40, height=10)
+text_area.pack(padx=5, pady=5, fill=BOTH, expand=True)
+text_area.insert(END, 'Metin giriniz...')
+
+text_area2 = Text(frame_top_right, bg='#ffffff', fg='#000000', font=('Arial', 11), width=40, height=10)
+text_area2.pack(padx=5, pady=5, fill=BOTH, expand=True)
+text_area2.insert(END, 'Çeviri')
+
+text_area.bind("<FocusIn>", lambda event: clear_placeholder(event, text_area, 'Metin giriniz...'))
+text_area.bind("<FocusOut>", lambda event: restore_placeholder(event, text_area, 'Metin giriniz...'))
+
+text_area2.bind("<FocusIn>", lambda event: clear_placeholder(event, text_area2, 'Çeviri'))
+text_area2.bind("<FocusOut>", lambda event: restore_placeholder(event, text_area2, 'Çeviri'))
+
+translate_button =Button(root,text='Çevir',activebackground="white", activeforeground="blue", command=translate_text)
+translate_button.place(relx=0.42, rely=0.73, relwidth=0.1375, relheight=0.06)
+
+
+
+
+
+root.mainloop()
